@@ -19,4 +19,15 @@ export class AppService {
       return `Redis connection failed: ${error instanceof Error ? error.message : String(error)}`;
     }
   }
+
+  async sendToQueue(data: unknown): Promise<string> {
+    try {
+      // 將資料加入佇列，process-data 是任務名稱，data 是要處理的資料
+      const job = await this.testQueue.add('process-data', data);
+      console.log('job', job);
+      return `Message sent with job ID: ${job.id}`;
+    } catch (error: unknown) {
+      return `Failed to send message: ${error instanceof Error ? error.message : String(error)}`;
+    }
+  }
 }
