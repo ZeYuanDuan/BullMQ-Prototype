@@ -5,18 +5,22 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
-
-  @Get('test-redis')
+  @Get('redisTest')
   async testRedis() {
     return this.appService.testRedisConnection();
   }
 
-  @Post('send')
-  async sendMessage(@Body() data: unknown) {
+  @Post('syncSend')
+  async syncSend(@Body() data: { message: string }) {
+    console.log('---------------同步操作---------------');
+    console.log('Controller 收到請求');
+    return this.appService.syncSend(data);
+  }
+
+  @Post('sendToQueue')
+  async sendToQueue(@Body() data: { message: string }) {
+    console.log('---------------非同步操作---------------');
+    console.log('Controller 收到請求');
     return this.appService.sendToQueue(data);
   }
 }
